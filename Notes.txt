@@ -1,0 +1,11 @@
+To create virtual Environment using CMD
+	python -m venv {Path wher you want environment}
+
+To activate the environment
+	{path where environment installed}\Scripts\activate
+
+To run Server
+	python manage.py runserver
+
+To create the app
+	python manage.py startapp myapp
