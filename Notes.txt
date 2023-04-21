@@ -9,3 +9,174 @@ To run Server
 
 To create the app
 	python manage.py startapp myapp
+
+
+MongoDB Commands:
+
+	Install pymongo first
+	Import pymongo
+
+	Intialize the Client
+		client = pymongo.MongoClient("mongodb://localhost:27017/")
+	
+	To create a Database
+		db = client.get_database("{Name of the database}")
+	To create a Collection
+		col = db["{Name of the collection}"]
+
+	To View All the database Present
+		client.list_database_names()
+
+	To insert One in Collection
+		data = {
+    			"name":"ManishParate",
+    			"Task":"Learn Django"
+		}
+		ncol.insert_one(data)
+
+	To insert multiple
+		data = [
+    			{"name":"mohan1","task":"Learn Django Basics"},
+    			{"name":"sohan1", "task":"Learn Django Advance"},
+    			{"name":"Ram1", "task":"Learn Python"}
+		]
+		saved = col.insert_many(data)
+
+	To CHECK of the ids of inserted
+		saved.inserted_ids
+	
+	To INSERT With CUSTOM IDS
+		data = [
+    			{"_id":1, "name":"mohan1","task":"Learn Django Basics"},
+    			{"_id":2, "name":"sohan1", "task":"Learn Django Advance"},
+    			{"_id":3, "name":"Ram1", "task":"Learn Python"}
+		]
+		col.insert_many(data)
+		#just mention _id
+
+	To FIND 1st Data in the Collection
+		data = col.find_one()
+		=> data
+		=> {'_id': ObjectId('644100705f358a075462fb8a'),
+ 			'name': 'ManishParate',
+ 			'Task': 'Learn Django'}
+	
+	To FIND ALL
+		data = col.find()
+	
+	To FIND a QUERY
+		query = {
+    			"name":"mohan"
+		}
+
+		data = col.find(query)
+		
+		for i in data:
+    			print(i)
+	
+	To FIND using ID
+		data = col.find(query,{
+    			"_id":0, "name": 0
+		})
+		for i in data:
+    			print(i)
+
+	To  SORT using A particular Field
+		col.find().sort("name")
+	
+		for i in col.find().sort("name"):
+    			print(i)
+
+	To SORT in Ascending order	
+		for i in col.find().sort("name",1):
+    			print(i)
+
+	To SORT in Descending Order
+		for i in col.find().sort("name",-1):
+    			print(i)
+
+	To delete a Query # deletes on query at a time
+		query = {
+    			"name":"mohan1"
+		}
+
+		x = col.find(query)
+
+		for i in x:
+    			print(i)
+
+	To DELETE many from a collection
+		query = {
+    			"name":{
+        			"$regex":"^R"
+    			}
+		}
+		
+		x = col.find(query)
+		for i in x:
+    			print(i)
+		=>{'_id': ObjectId('644102265f358a075462fb8d'), 'name': 'Ram', 'task': 'Learn Python'}
+			{'_id': ObjectId('6441027b5f358a075462fb90'), 'name': 'Ram1', 'task': 'Learn Python'}
+			{'_id': 3, 'name': 'Ram1', 'task': 'Learn Python'}
+
+		deleted = col.delete_many(query)
+		deleted
+		=><pymongo.results.DeleteResult at 0x1da17635c70>
+		deleted.deleted_count
+		=> 3
+	
+	To DELETE ALL
+		deleted = col.delete_many({})
+
+	To DROP a Collection
+		col.drop()
+
+	To UPDATE one query
+		query = {
+    			"name":"manish"
+		}
+
+		x = col.find(query)
+
+		for i in x:
+   			print(i)
+		=>{'_id': ObjectId('6441715f5f358a075462fb92'), 'name': 'manish', 'task': 'learn Driving'}
+
+		new_value = {
+    			"$set":{
+        		"name":"manishji"
+    			}
+		}
+		col.update_one(query,new_value)
+
+		x = col.find({
+    			"name":"manishji"
+		})
+	
+		for i in x:
+    			print(i)
+		=>{'_id': ObjectId('6441715f5f358a075462fb92'), 'name': 'manishji', 'task': 'learn Driving'}
+
+To UPDATE many
+	query = {
+    		"name":"kartik"
+	}
+	new_value = {
+    		"$set":{
+        		"name":"katrik"
+    		}
+	}
+	col.update_many(query,new_value)
+
+	for i in col.find():
+    		print(i)
+	=>{'_id': ObjectId('6441715f5f358a075462fb91'), 'name': 'prateek', 'task': 'Learn Django Basics'}
+		{'_id': ObjectId('6441715f5f358a075462fb92'), 'name': 'manishji', 'task': 'learn Driving'}
+		{'_id': ObjectId('6441715f5f358a075462fb93'), 'name': 'katrik', 'task': 'Go Fishing'}
+		{'_id': ObjectId('6441715f5f358a075462fb94'), 'name': 'mukhrit', 'task': 'Go dance'}
+
+To LIMIT our results
+	for i in col.find().limit(2):
+   		print(i)
+	=>{'_id': ObjectId('6441715f5f358a075462fb91'), 'name': 'prateek', 'task': 'Learn Django Basics'}
+		{'_id': ObjectId('6441715f5f358a075462fb92'), 'name': 'manishji', 'task': 'learn Driving'}
