@@ -19,6 +19,12 @@ def create(request):
     return HttpResponseRedirect(reverse_lazy("forms:update_form",args=[pk]))
 
 def update_form(request,pk):
+
+    if request.method == "POST":
+        data = request.POST
+        print(data)
+        print(data.getlist("InputText"))
+
     try:
         #Genrate Some Error
         form_data = form.find(pk)
